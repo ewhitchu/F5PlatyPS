@@ -29,9 +29,9 @@ if (-not $DotnetCli) {
 }
 
 if (Get-Variable -Name IsCoreClr -ValueOnly -ErrorAction SilentlyContinue) {
-    $framework = 'netstandard1.6'
+    $framework = 'netstandard2.1'
 } else {
-    $framework = 'net451'
+    $framework = 'net481'
 }
 
 & $DotnetCli publish ./src/Markdown.MAML -f $framework --output=$pwd/publish /p:Configuration=$Configuration
@@ -43,44 +43,44 @@ $assemblyPaths = (
 
 # copy artifacts
 New-Item -Type Directory out -ErrorAction SilentlyContinue > $null
-Copy-Item -Rec -Force src\platyPS out
+Copy-Item -Rec -Force src\F5PlatyPS out
 foreach($assemblyPath in $assemblyPaths)
 {
 	$assemblyFileName = [System.IO.Path]::GetFileName($assemblyPath)
-	$outputPath = "out\platyPS\$assemblyFileName"
+	$outputPath = "out\F5PlatyPS\$assemblyFileName"
 	if ((-not (Test-Path $outputPath)) -or
 		(Test-Path $outputPath -OlderThan (Get-ChildItem $assemblyPath).LastWriteTime))
 	{
-		Copy-Item $assemblyPath out\platyPS
+		Copy-Item $assemblyPath out\F5PlatyPS
 	} else {
 		Write-Host -Foreground Yellow "Skip $assemblyFileName copying"
 	}
 }
 
 # copy schema file and docs
-Copy-Item .\platyPS.schema.md out\platyPS
-New-Item -Type Directory out\platyPS\docs -ErrorAction SilentlyContinue > $null
-Copy-Item .\docs\* out\platyPS\docs\
+Copy-Item .\F5PlatyPS.schema.md out\F5PlatyPS
+New-Item -Type Directory out\F5PlatyPS\docs -ErrorAction SilentlyContinue > $null
+Copy-Item .\docs\* out\F5PlatyPS\docs\
 
 # copy template files
-New-Item -Type Directory out\platyPS\templates -ErrorAction SilentlyContinue > $null
-Copy-Item .\templates\* out\platyPS\templates\
+New-Item -Type Directory out\F5PlatyPS\templates -ErrorAction SilentlyContinue > $null
+Copy-Item .\templates\* out\F5PlatyPS\templates\
 
 # put the right module version
 if ($env:APPVEYOR_REPO_TAG_NAME)
 {
-    $manifest = cat -raw out\platyPS\platyPS.psd1
+    $manifest = cat -raw out\F5PlatyPS\F5PlatyPS.psd1
     $manifest = $manifest -replace "ModuleVersion = '0.0.1'", "ModuleVersion = '$($env:APPVEYOR_REPO_TAG_NAME)'"
-    Set-Content -Value $manifest -Path out\platyPS\platyPS.psd1 -Encoding Ascii
+    Set-Content -Value $manifest -Path out\F5PlatyPS\F5PlatyPS.psd1 -Encoding Ascii
 }
 
 # dogfooding: generate help for the module
-Remove-Module platyPS -ErrorAction SilentlyContinue
-Import-Module $pwd\out\platyPS
+Remove-Module F5PlatyPS -ErrorAction SilentlyContinue
+Import-Module $pwd\out\F5PlatyPS
 
 if (-not $SkipDocs) {
-    New-ExternalHelp docs -OutputPath out\platyPS\en-US -Force
+    New-ExternalHelp docs -OutputPath out\F5PlatyPS\en-AU -Force
     # reload module, to apply generated help
-    Import-Module $pwd\out\platyPS -Force
+    Import-Module $pwd\out\F5PlatyPS -Force
 }
 
