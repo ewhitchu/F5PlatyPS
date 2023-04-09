@@ -79,7 +79,7 @@ Remove-Module F5PlatyPS -ErrorAction SilentlyContinue
 Import-Module $pwd\out\F5PlatyPS
 
 if (-not $SkipDocs) {
-    New-ExternalHelp docs -OutputPath out\F5PlatyPS\en-AU -Force
+    New-F5ExternalHelp docs -OutputPath out\F5PlatyPS\en-AU -Force
     # reload module, to apply generated help
     Import-Module $pwd\out\F5PlatyPS -Force
 }

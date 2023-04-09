@@ -1,5 +1,5 @@
-# F5PlatyPS
-## about_F5PlatyPS
+﻿# platyPS
+## about_platyPS
 
 # SHORT DESCRIPTION
 Write PowerShell External Help in Markdown.
